@@ -1,0 +1,24 @@
+name: Publish UltraSweeper for Android
+
+# Pushing a version tag (for example v1.2.0) publishes the UltraSweeper.apk in this repo as a Release.
+on:
+  push:
+    tags:
+      - 'v*'
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Publish the Release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release create "$GITHUB_REF_NAME" UltraSweeper.apk \
+            --title "UltraSweeper ${GITHUB_REF_NAME#v} for Android" \
+            --notes "Download **UltraSweeper.apk** below and open it on your phone. If Android asks, allow installing apps from your browser or file manager. Installing a newer version keeps your stats and settings."
